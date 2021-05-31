@@ -1,6 +1,6 @@
 ## Need Python 3 with PIP3
 
-## Run following commands. Skip the first command if you are using the ai2 environment
+## Run following commands. Skip these commands if you are using the ai2 environment
 
 ```
 $ python -m venv ai2
