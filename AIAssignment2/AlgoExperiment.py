@@ -111,7 +111,6 @@ def bfs(start, goal):
     current = fringe.pop(0)
     path = []
     while (current.state != goal):
-        print(current.state)
         fringe.extend(expand_node(current))
         current = fringe.pop(0)
     while (current.parent != None):
@@ -228,8 +227,8 @@ def validate_response(result):
 
 def main():
     starting_state = readfile(r"state.txt")
-    result = a_star(starting_state, goal_state)
-    validate_response(result)
+    bfs_result = bfs(starting_state, goal_state)
+    validate_response(bfs_result)
 
 
 if __name__ == "__main__":
