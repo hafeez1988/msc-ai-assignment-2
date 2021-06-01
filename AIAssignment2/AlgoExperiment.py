@@ -1,47 +1,26 @@
 #!/usr/bin/python
 ### Data Structures
 #
-# The state of the board is stored in a list. The list stores values for the
-# board in the following positions:
+# Sample current states for testing is shown below.
+# Add following lines one by one into state.txt for testing:
 #
-# -------------
-# | 0 | 3 | 6 |
-# -------------
-# | 1 | 4 | 7 |
-# -------------
-# | 2 | 5 | 8 |
-# -------------
+# 8 1 7 2 4 6 3 0 5
+# 1 0 7 8 2 6 3 4 5
+# 8 1 7 0 2 6 3 4 5
+# 8 1 7 3 2 6 4 0 5
+# 8 1 7 0 2 6 3 4 5
+# 8 1 7 0 2 6 3 4 5
+# 8 1 7 2 6 0 3 4 5
+# 8 0 7 2 1 6 3 4 5
+# 8 1 7 2 4 6 3 0 5
 #
-# The goal is defined as:
-#
-# -------------
-# | 1 | 2 | 3 |
-# -------------
-# | 8 | 0 | 4 |
-# -------------
-# | 7 | 6 | 5 |
-# -------------
-#
-# Where 0 denotes the blank tile or space.
-goal_state = [1, 8, 7, 2, 0, 6, 3, 4, 5]
-#
-# The code will read state from a file called "state.txt" where the format is
-# as above but space seperated. i.e. the content for the goal state would be
-# 1 8 7 2 0 6 3 4 5
+# The 0 denotes the empty space.
+goal_state = [1, 2, 7, 8, 4, 6, 3, 0, 5]
 
-import sys
+import time
+import tracemalloc
+
 from pythonds.basic.stack import Stack
-from operator import attrgetter
-
-
-def display_board(state):
-    print( "-------------")
-    print( "| %i | %i | %i |" % (state[0], state[3], state[6]))
-    print( "-------------")
-    print( "| %i | %i | %i |" % (state[1], state[4], state[7]))
-    print( "-------------")
-    print( "| %i | %i | %i |" % (state[2], state[5], state[8]))
-    print( "-------------")
 
 
 def move_up(state):
@@ -130,104 +109,84 @@ def expand_node(node):
 def bfs(start, goal):
     """Performs a breadth first search from the start state to the goal"""
     # A list (can act as a queue) for the nodes.
-    goal=goal
-    start_node=create_node(start,None,None,0,0)
-    fringe=[]
+    goal = goal
+    start_node = create_node(start, None, None, 0, 0)
+    fringe = []
     fringe.append(start_node)
-    current=fringe.pop(0)
-    path=[]
-    while(current.state!=goal):
+    current = fringe.pop(0)
+    path = []
+    while (current.state != goal):
         fringe.extend(expand_node(current))
-        current=fringe.pop(0)
-    while(current.parent!=None):
-        path.insert(0,current.operator)
-        current=current.parent
+        current = fringe.pop(0)
+    while (current.parent != None):
+        path.insert(0, current.operator)
+        current = current.parent
     return path
     pass
 
 
 def dfs(start, goal, depth=10):
-    start_node=create_node(start,None,None,0,0)
-    fringe_stack=Stack()
+    start_node = create_node(start, None, None, 0, 0)
+    fringe_stack = Stack()
     fringe_stack.push(start_node)
-    current=fringe_stack.pop()
-    path=[]
-    while(current.state!=goal):
-        temp=expand_node(current)
+    current = fringe_stack.pop()
+    path = []
+    while (current.state != goal):
+        temp = expand_node(current)
         for item in temp:
             fringe_stack.push(item)
-        current=fringe_stack.pop()
-        if(current.depth>10):
+        current = fringe_stack.pop()
+        if (current.depth > 10):
             return None
-    while(current.parent!=None):
-        path.insert(0,current.operator)
-        current=current.parent
+    while (current.parent != None):
+        path.insert(0, current.operator)
+        current = current.parent
     return path
 
 
-
-def uniform_cost(start,goal):
-    start_node=create_node(start,None,None,0,0)
-    fringe=[]
-    path=[]
+def greedy(start, goal):
+    start_node = create_node(start, None, None, 0, 0)
+    fringe = []
+    path = []
     fringe.append(start_node)
-    current=fringe.pop(0)
-    while(current.state!=goal):
-        temp=expand_node(current)
-        for item in temp:
-            item.depth+=current.depth
-            fringe.append(item)
-        fringe.sort(key =lambda x: x.depth)
-        current=fringe.pop(0)
-    while(current.parent!=None):
-        path.insert(0,current.operator)
-        current=current.parent
-    return path
-
-
-def greedy(start,goal):
-    start_node=create_node(start,None,None,0,0)
-    fringe=[]
-    path=[]
-    fringe.append(start_node)
-    current=fringe.pop(0)
-    while(current.state!=goal):
+    current = fringe.pop(0)
+    while (current.state != goal):
         fringe.extend(expand_node(current))
         for item in fringe:
-            h(item,goal)
-        fringe.sort(key =lambda x: x.heuristic)
-        current=fringe.pop(0)
-    while(current.parent!=None):
-        path.insert(0,current.operator)
-        current=current.parent
+            h(item, goal)
+        fringe.sort(key=lambda x: x.heuristic)
+        current = fringe.pop(0)
+    while (current.parent != None):
+        path.insert(0, current.operator)
+        current = current.parent
     return path
 
 
 def a_star(start, goal):
-    start_node=create_node(start,None,None,0,0)
-    fringe=[]
-    path=[]
+    start_node = create_node(start, None, None, 0, 0)
+    fringe = []
+    path = []
     fringe.append(start_node)
-    current=fringe.pop(0)
-    while(current.state!=goal):
+    current = fringe.pop(0)
+    while (current.state != goal):
         fringe.extend(expand_node(current))
         for item in fringe:
-            h(item,goal)
-            item.heuristic+=item.depth
-        fringe.sort(key =lambda x: x.heuristic)
-        current=fringe.pop(0)
-    while(current.parent!=None):
-        path.insert(0,current.operator)
-        current=current.parent
+            h(item, goal)
+            item.heuristic += item.depth
+        fringe.sort(key=lambda x: x.heuristic)
+        current = fringe.pop(0)
+    while (current.parent != None):
+        path.insert(0, current.operator)
+        current = current.parent
     return path
 
 
 def h(state, goal):
-    dmatch=0
-    for i in range(0,9):
+    dmatch = 0
+    for i in range(0, 9):
         if state.state[i] != goal[i]:
-            dmatch+=1
-    state.heuristic=dmatch
+            dmatch += 1
+    state.heuristic = dmatch
 
 
 # Node data structure
@@ -244,7 +203,7 @@ class Node:
         # Contains the path cost of this node from depth 0. Not used for depth/breadth first.
         self.cost = cost
 
-        self.heuristic=None
+        self.heuristic = None
 
 
 def readfile(filename):
@@ -258,23 +217,107 @@ def readfile(filename):
     for element in data:
         state.append(int(element))
     print('state: ', state)
+    print('goal: ', goal_state)
     return state
 
 
-# Main method
-def main():
-    starting_state = readfile(r"state.txt")
-    ### CHANGE THIS FUNCTION TO USE bfs, dfs, ids or a_star
-    result = bfs(starting_state, goal_state)
+def validate_response(result):
     if result == None:
-        print( "No solution found")
+        print("No solution found")
     elif result == [None]:
-        print( "Start node was the goal!")
+        print("Start node was the goal!")
     else:
-        print(result)
         print(len(result), " moves")
 
 
-# A python-isim. Basically if the file is being run execute the main() function.
+def bfs_matrics_collector(starting_state):
+    print("")
+    print("************ RUNNING BFS ALGORITHM ************")
+
+    start_time = time.perf_counter_ns()
+    tracemalloc.start()
+
+    result = bfs(starting_state, goal_state)
+    validate_response(result)
+
+    current, peak = tracemalloc.get_traced_memory()
+    print(f"Current memory: {current / 10 ** 6}MB | Peak memory: {peak / 10 ** 6}MB")
+    tracemalloc.stop()
+    elapsed = (time.perf_counter_ns() - start_time)
+    print("Time elapsed(nanoseconds): ", elapsed)
+
+    print("***********************************************")
+    print("")
+
+
+def dfs_matrics_collector(starting_state):
+    print("")
+    print("************ RUNNING DFS ALGORITHM ************")
+
+    start_time = time.perf_counter_ns()
+    tracemalloc.start()
+
+    result = dfs(starting_state, goal_state)
+    validate_response(result)
+
+    current, peak = tracemalloc.get_traced_memory()
+    print(f"Current memory: {current / 10 ** 6}MB | Peak memory: {peak / 10 ** 6}MB")
+    tracemalloc.stop()
+    elapsed = (time.perf_counter_ns() - start_time)
+    print("Time elapsed(nanoseconds): ", elapsed)
+
+    print("***********************************************")
+    print("")
+
+
+def greedy_matrics_collector(starting_state):
+    print("")
+    print("************ RUNNING GREEDY ALGORITHM *********")
+
+    start_time = time.perf_counter_ns()
+    tracemalloc.start()
+
+    result = greedy(starting_state, goal_state)
+    validate_response(result)
+
+    current, peak = tracemalloc.get_traced_memory()
+    print(f"Current memory: {current / 10 ** 6}MB | Peak memory: {peak / 10 ** 6}MB")
+    tracemalloc.stop()
+    elapsed = (time.perf_counter_ns() - start_time)
+    print("Time elapsed(nanoseconds): ", elapsed)
+
+    print("***********************************************")
+    print("")
+
+
+def a_star_matrics_collector(starting_state):
+    print("")
+    print("************ RUNNING A* ALGORITHM *************")
+
+    start_time = time.perf_counter_ns()
+    tracemalloc.start()
+
+    result = a_star(starting_state, goal_state)
+    validate_response(result)
+
+    current, peak = tracemalloc.get_traced_memory()
+    print(f"Current memory: {current / 10 ** 6}MB | Peak memory: {peak / 10 ** 6}MB")
+    tracemalloc.stop()
+    elapsed = (time.perf_counter_ns() - start_time)
+    print("Time elapsed(nanoseconds): ", elapsed)
+
+    print("***********************************************")
+    print("")
+
+
+def main():
+    starting_state = readfile(r"state.txt")
+
+    bfs_matrics_collector(starting_state)
+    dfs_matrics_collector(starting_state)
+    greedy_matrics_collector(starting_state)
+    a_star_matrics_collector(starting_state)
+
+
 if __name__ == "__main__":
     main()
