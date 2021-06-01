@@ -1,29 +1,19 @@
 #!/usr/bin/python
 ### Data Structures
 #
-# The state of the board is stored in a list. The list stores values for the
-# board in the following positions:
+# Sample goal states for testing:
+# [8, 1, 7, 2, 4, 6, 3, 0, 5]
+# [1, 0, 7, 8, 2, 6, 3, 4, 5]
+# [8, 1, 7, 0, 2, 6, 3, 4, 5]
+# [8, 1, 7, 3, 2, 6, 4, 0, 5]
+# [8, 1, 7, 0, 2, 6, 3, 4, 5]
+# [8, 1, 7, 0, 2, 6, 3, 4, 5]
+# [8, 1, 7, 2, 6, 0, 3, 4, 5]
+# [8, 0, 7, 2, 1, 6, 3, 4, 5]
+# [8, 1, 7, 2, 4, 6, 3, 0, 5]
 #
-# -------------
-# | 0 | 3 | 6 |
-# -------------
-# | 1 | 4 | 7 |
-# -------------
-# | 2 | 5 | 8 |
-# -------------
-#
-# The goal is defined as:
-#
-# -------------
-# | 1 | 2 | 3 |
-# -------------
-# | 8 | 0 | 4 |
-# -------------
-# | 7 | 6 | 5 |
-# -------------
-#
-# Where 0 denotes the blank tile or space.
-goal_state = [1, 8, 7, 2, 0, 6, 3, 4, 5]
+# The 0 denotes the empty space.
+goal_state = [1, 2, 7, 8, 4, 6, 3, 0, 5]
 
 from pythonds.basic.stack import Stack
 
@@ -121,6 +111,7 @@ def bfs(start, goal):
     current = fringe.pop(0)
     path = []
     while (current.state != goal):
+        print(current.state)
         fringe.extend(expand_node(current))
         current = fringe.pop(0)
     while (current.parent != None):
@@ -143,25 +134,6 @@ def dfs(start, goal, depth=10):
         current = fringe_stack.pop()
         if (current.depth > 10):
             return None
-    while (current.parent != None):
-        path.insert(0, current.operator)
-        current = current.parent
-    return path
-
-
-def uniform_cost(start, goal):
-    start_node = create_node(start, None, None, 0, 0)
-    fringe = []
-    path = []
-    fringe.append(start_node)
-    current = fringe.pop(0)
-    while (current.state != goal):
-        temp = expand_node(current)
-        for item in temp:
-            item.depth += current.depth
-            fringe.append(item)
-        fringe.sort(key=lambda x: x.depth)
-        current = fringe.pop(0)
     while (current.parent != None):
         path.insert(0, current.operator)
         current = current.parent
@@ -244,11 +216,7 @@ def readfile(filename):
     return state
 
 
-# Main method
-def main():
-    starting_state = readfile(r"state.txt")
-    ### CHANGE THIS FUNCTION TO USE bfs, dfs, ids or a_star
-    result = bfs(starting_state, goal_state)
+def validate_response(result):
     if result == None:
         print("No solution found")
     elif result == [None]:
@@ -258,6 +226,11 @@ def main():
         print(len(result), " moves")
 
 
-# A python-isim. Basically if the file is being run execute the main() function.
+def main():
+    starting_state = readfile(r"state.txt")
+    result = a_star(starting_state, goal_state)
+    validate_response(result)
+
+
 if __name__ == "__main__":
     main()
