@@ -15,6 +15,9 @@
 # The 0 denotes the empty space.
 goal_state = [1, 2, 7, 8, 4, 6, 3, 0, 5]
 
+import time
+import tracemalloc
+
 from pythonds.basic.stack import Stack
 
 
@@ -212,6 +215,7 @@ def readfile(filename):
     for element in data:
         state.append(int(element))
     print('state: ', state)
+    print('goal: ', goal_state)
     return state
 
 
@@ -221,14 +225,96 @@ def validate_response(result):
     elif result == [None]:
         print("Start node was the goal!")
     else:
-        print(result)
         print(len(result), " moves")
+
+
+def bfs_matrics_collector(starting_state):
+    print("")
+    print("************ RUNNING BFS ALGORITHM ************")
+
+    start_time = time.perf_counter_ns()
+    tracemalloc.start()
+
+    result = bfs(starting_state, goal_state)
+    validate_response(result)
+
+    current, peak = tracemalloc.get_traced_memory()
+    print(f"Current memory: {current / 10 ** 6}MB | Peak memory: {peak / 10 ** 6}MB")
+    tracemalloc.stop()
+    elapsed = (time.perf_counter_ns() - start_time)
+    print("Time elapsed(nanoseconds): ", elapsed)
+
+    print("***********************************************")
+    print("")
+
+
+def dfs_matrics_collector(starting_state):
+    print("")
+    print("************ RUNNING DFS ALGORITHM ************")
+
+    start_time = time.perf_counter_ns()
+    tracemalloc.start()
+
+    result = dfs(starting_state, goal_state)
+    validate_response(result)
+
+    current, peak = tracemalloc.get_traced_memory()
+    print(f"Current memory: {current / 10 ** 6}MB | Peak memory: {peak / 10 ** 6}MB")
+    tracemalloc.stop()
+    elapsed = (time.perf_counter_ns() - start_time)
+    print("Time elapsed(nanoseconds): ", elapsed)
+
+    print("***********************************************")
+    print("")
+
+
+def greedy_matrics_collector(starting_state):
+    print("")
+    print("************ RUNNING GREEDY ALGORITHM *********")
+
+    start_time = time.perf_counter_ns()
+    tracemalloc.start()
+
+    result = greedy(starting_state, goal_state)
+    validate_response(result)
+
+    current, peak = tracemalloc.get_traced_memory()
+    print(f"Current memory: {current / 10 ** 6}MB | Peak memory: {peak / 10 ** 6}MB")
+    tracemalloc.stop()
+    elapsed = (time.perf_counter_ns() - start_time)
+    print("Time elapsed(nanoseconds): ", elapsed)
+
+    print("***********************************************")
+    print("")
+
+
+def a_star_matrics_collector(starting_state):
+    print("")
+    print("************ RUNNING A* ALGORITHM *************")
+
+    start_time = time.perf_counter_ns()
+    tracemalloc.start()
+
+    result = a_star(starting_state, goal_state)
+    validate_response(result)
+
+    current, peak = tracemalloc.get_traced_memory()
+    print(f"Current memory: {current / 10 ** 6}MB | Peak memory: {peak / 10 ** 6}MB")
+    tracemalloc.stop()
+    elapsed = (time.perf_counter_ns() - start_time)
+    print("Time elapsed(nanoseconds): ", elapsed)
+
+    print("***********************************************")
+    print("")
 
 
 def main():
     starting_state = readfile(r"state.txt")
-    bfs_result = bfs(starting_state, goal_state)
-    validate_response(bfs_result)
+
+    bfs_matrics_collector(starting_state)
+    dfs_matrics_collector(starting_state)
+    greedy_matrics_collector(starting_state)
+    a_star_matrics_collector(starting_state)
 
 
 if __name__ == "__main__":
