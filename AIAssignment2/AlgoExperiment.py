@@ -1,16 +1,18 @@
 #!/usr/bin/python
 ### Data Structures
 #
-# Sample goal states for testing:
-# [8, 1, 7, 2, 4, 6, 3, 0, 5]
-# [1, 0, 7, 8, 2, 6, 3, 4, 5]
-# [8, 1, 7, 0, 2, 6, 3, 4, 5]
-# [8, 1, 7, 3, 2, 6, 4, 0, 5]
-# [8, 1, 7, 0, 2, 6, 3, 4, 5]
-# [8, 1, 7, 0, 2, 6, 3, 4, 5]
-# [8, 1, 7, 2, 6, 0, 3, 4, 5]
-# [8, 0, 7, 2, 1, 6, 3, 4, 5]
-# [8, 1, 7, 2, 4, 6, 3, 0, 5]
+# Sample current states for testing is shown below.
+# Add following lines one by one into state.txt for testing:
+#
+# 8 1 7 2 4 6 3 0 5
+# 1 0 7 8 2 6 3 4 5
+# 8 1 7 0 2 6 3 4 5
+# 8 1 7 3 2 6 4 0 5
+# 8 1 7 0 2 6 3 4 5
+# 8 1 7 0 2 6 3 4 5
+# 8 1 7 2 6 0 3 4 5
+# 8 0 7 2 1 6 3 4 5
+# 8 1 7 2 4 6 3 0 5
 #
 # The 0 denotes the empty space.
 goal_state = [1, 2, 7, 8, 4, 6, 3, 0, 5]
